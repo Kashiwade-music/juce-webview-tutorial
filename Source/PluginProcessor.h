@@ -52,7 +52,29 @@ class GainPanTutorialAudioProcessor : public juce::AudioProcessor {
   void getStateInformation(juce::MemoryBlock& destData) override;
   void setStateInformation(const void* data, int sizeInBytes) override;
 
+  //==============================================================================
+  juce::AudioProcessorValueTreeState parameters{
+      *this,
+      nullptr,
+      juce::Identifier("PARAMETERS"),
+      {
+          std::make_unique<juce::AudioParameterFloat>(
+              "gain", "gain", juce::NormalisableRange<float>(-100.0f, 10.0f),
+              0.0f),
+          std::make_unique<juce::AudioParameterFloat>(
+              "panAngle", "panAngle",
+              juce::NormalisableRange<float>(-100.0f, 100.0f), 0.0f),
+          std::make_unique<juce::AudioParameterChoice>(
+              "panRule", "panRule", juce::StringArray("linear", "balanced"), 1),
+          std::make_unique<juce::AudioParameterBool>("bypass", "bypass", false),
+      }};
+
  private:
+  std::atomic<float>* gain = parameters.getRawParameterValue("gain");
+  std::atomic<float>* panAngle = parameters.getRawParameterValue("panAngle");
+  std::atomic<float>* panRule = parameters.getRawParameterValue("panRule");
+  std::atomic<float>* bypass = parameters.getRawParameterValue("bypass");
+
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainPanTutorialAudioProcessor)
 };
