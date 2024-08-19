@@ -69,6 +69,10 @@ class GainPanTutorialAudioProcessor : public juce::AudioProcessor {
           std::make_unique<juce::AudioParameterBool>("bypass", "bypass", false),
       }};
 
+  juce::AudioProcessorParameter* getBypassParameter() const {
+    return parameters.getParameter("bypass");
+  }
+
  private:
   std::atomic<float>* gain = parameters.getRawParameterValue("gain");
   std::atomic<float>* panAngle = parameters.getRawParameterValue("panAngle");
