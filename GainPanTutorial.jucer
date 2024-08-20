@@ -12,6 +12,7 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="KDnJL3" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <FILE id="tOK0Jj" name="assets.zip" compile="0" resource="1" file="assets.zip"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
