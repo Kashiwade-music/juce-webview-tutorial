@@ -124,8 +124,9 @@ bool GainPanTutorialAudioProcessor::isBusesLayoutSupported(
 }
 #endif
 
-void GainPanTutorialAudioProcessor::processBlock(
-    juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) {
+template <typename T>
+inline void GainPanTutorialAudioProcessor::processBlockImpl(
+    juce::AudioBuffer<T>& buffer, juce::MidiBuffer& midiMessages) {
   juce::ScopedNoDenormals noDenormals;
   auto totalNumInputChannels = getTotalNumInputChannels();
   auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -139,16 +140,33 @@ void GainPanTutorialAudioProcessor::processBlock(
   for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
     buffer.clear(i, 0, buffer.getNumSamples());
 
-  // This is the place where you'd normally do the guts of your plugin's
-  // audio processing...
-  // Make sure to reset the state if your inner loop is processing
-  // the samples and the outer loop is handling the channels.
-  // Alternatively, you can process the samples with the channels
-  // interleaved by keeping the same state.
-  for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-    auto* channelData = buffer.getWritePointer(channel);
+  updateParameters();
 
-    // ..do something to the data...
+  auto* leftAudioBuff = buffer.getWritePointer(0);
+  auto* rightAudioBuff = buffer.getWritePointer(1);
+  auto buffLength = buffer.getNumSamples();
+  bool panIsLinear = (*panRule == 0);
+
+  for (int samplesIdx = 0; samplesIdx < buffLength; samplesIdx++) {
+    auto dryWetValue = dryWetSmoothed.getNextValue();
+    auto gainValue =
+        juce::Decibels::decibelsToGain(gainSmoothed.getNextValue(), -100.0f);
+    auto leftMulValue = gainValue * dryWetValue;
+    auto rightMulValue = leftMulValue;
+
+    auto panValue = panAngleSmoothed.getNextValue();
+    if (panIsLinear) {
+      leftMulValue *= (1 - panValue);
+      rightMulValue *= panValue;
+    } else {
+      leftMulValue *= std::min(1.0f, 2 - 2 * panValue);
+      rightMulValue *= std::min(1.0f, 2 * panValue);
+    }
+
+    leftAudioBuff[samplesIdx] = leftAudioBuff[samplesIdx] * leftMulValue +
+                                leftAudioBuff[samplesIdx] * (1 - dryWetValue);
+    rightAudioBuff[samplesIdx] = rightAudioBuff[samplesIdx] * rightMulValue +
+                                 rightAudioBuff[samplesIdx] * (1 - dryWetValue);
   }
 }
 

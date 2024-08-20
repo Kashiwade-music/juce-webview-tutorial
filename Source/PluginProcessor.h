@@ -27,7 +27,20 @@ class GainPanTutorialAudioProcessor : public juce::AudioProcessor {
   bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
 #endif
 
-  void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+  template <typename T>
+  void processBlockImpl(juce::AudioBuffer<T>& buffer,
+                        juce::MidiBuffer& midiMessages);
+
+  void processBlock(juce::AudioBuffer<float>& buffer,
+                    juce::MidiBuffer& midiMessages) override {
+    processBlockImpl(buffer, midiMessages);
+  };
+  void processBlock(juce::AudioBuffer<double>& buffer,
+                    juce::MidiBuffer& midiMessages) override {
+    processBlockImpl(buffer, midiMessages);
+  };
+
+  bool supportsDoublePrecisionProcessing() const override { return true; }
 
   //==============================================================================
   juce::AudioProcessorEditor* createEditor() override;
