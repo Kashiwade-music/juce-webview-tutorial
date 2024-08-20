@@ -79,6 +79,17 @@ class GainPanTutorialAudioProcessor : public juce::AudioProcessor {
   std::atomic<float>* panRule = parameters.getRawParameterValue("panRule");
   std::atomic<float>* bypass = parameters.getRawParameterValue("bypass");
 
+  juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> gainSmoothed;
+  juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear>
+      panAngleSmoothed;
+  juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> dryWetSmoothed;
+
+  void updateParameters() {
+    gainSmoothed.setTargetValue(*gain);
+    panAngleSmoothed.setTargetValue((*panAngle / 100 + 1) * 0.5);
+    dryWetSmoothed.setTargetValue(*bypass ? 0.0f : 1.0f);
+  };
+
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainPanTutorialAudioProcessor)
 };

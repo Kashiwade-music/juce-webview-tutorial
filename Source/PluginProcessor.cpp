@@ -83,6 +83,14 @@ void GainPanTutorialAudioProcessor::prepareToPlay(double sampleRate,
                                                   int samplesPerBlock) {
   // Use this method as the place to do any pre-playback
   // initialisation that you need..
+  gainSmoothed.reset(sampleRate, 0.01);
+  gainSmoothed.setCurrentAndTargetValue(*gain);
+
+  panAngleSmoothed.reset(sampleRate, 0.01);
+  panAngleSmoothed.setCurrentAndTargetValue((*panAngle / 100 + 1) * 0.5);
+
+  dryWetSmoothed.reset(sampleRate, 0.01);
+  dryWetSmoothed.setCurrentAndTargetValue(*bypass ? 0.0f : 1.0f);
 }
 
 void GainPanTutorialAudioProcessor::releaseResources() {
