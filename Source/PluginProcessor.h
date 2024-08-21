@@ -72,11 +72,11 @@ class GainPanTutorialAudioProcessor : public juce::AudioProcessor {
       juce::Identifier("PARAMETERS"),
       {
           std::make_unique<juce::AudioParameterFloat>(
-              "gain", "gain", juce::NormalisableRange<float>(-100.0f, 10.0f),
-              0.0f),
+              "gain", "gain",
+              juce::NormalisableRange<float>(-100.0f, 10.0f, 0.01f, 2), 0.0f),
           std::make_unique<juce::AudioParameterFloat>(
               "panAngle", "panAngle",
-              juce::NormalisableRange<float>(-100.0f, 100.0f), 0.0f),
+              juce::NormalisableRange<float>(-100.0f, 100.0f, 1.0f), 0.0f),
           std::make_unique<juce::AudioParameterChoice>(
               "panRule", "panRule", juce::StringArray("linear", "balanced"), 1),
           std::make_unique<juce::AudioParameterBool>("bypass", "bypass", false),
