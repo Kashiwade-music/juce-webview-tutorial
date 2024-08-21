@@ -18,8 +18,8 @@ GainPanTutorialAudioProcessorEditor::GainPanTutorialAudioProcessorEditor(
   // editor's size to whatever you need it to be.
 
   addAndMakeVisible(webComponent);
-  webComponent.goToURL("http://localhost:5173/");
-  // webComponent.goToURL(juce::WebBrowserComponent::getResourceProviderRoot());
+  // webComponent.goToURL("http://localhost:5173/");
+  webComponent.goToURL(juce::WebBrowserComponent::getResourceProviderRoot());
   setSize(170, 650);
 }
 
