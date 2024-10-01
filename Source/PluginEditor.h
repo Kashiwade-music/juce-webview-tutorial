@@ -47,10 +47,10 @@ class GainPanTutorialAudioProcessorEditor : public juce::AudioProcessorEditor {
 
   juce::WebControlParameterIndexReceiver controlParameterIndexReceiver;
 
-  juce::WebSliderRelay gainRelay{webComponent, "gain"};
-  juce::WebSliderRelay panRelay{webComponent, "panAngle"};
-  juce::WebComboBoxRelay panRuleRelay{webComponent, "panRule"};
-  juce::WebToggleButtonRelay bypassRelay{webComponent, "bypass"};
+  juce::WebSliderRelay gainRelay{"gain"};
+  juce::WebSliderRelay panRelay{"panAngle"};
+  juce::WebComboBoxRelay panRuleRelay{"panRule"};
+  juce::WebToggleButtonRelay bypassRelay{"bypass"};
 
   //==============================================================================
 
